@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { getSession } from "./lib/auth"
+import { jwtVerify } from "jose"
 
 export async function middleware(request: NextRequest) {
   // Check if the request is for admin routes
@@ -11,10 +11,23 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      const user = await getSession()
+      const session = request.cookies.get("session")?.value
+      if (!session) {
+        return NextResponse.redirect(new URL("/admin/login", request.url))
+      }
 
-      if (!user || user.role !== "admin") {
-        // Redirect to login page
+      const secretKey = process.env.JWT_SECRET || "your-secret-key-change-in-production"
+      const key = new TextEncoder().encode(secretKey)
+      const { payload } = await jwtVerify(session, key, { algorithms: ["HS256"] })
+
+      const role = (payload as any)?.role
+      const expires = (payload as any)?.expires
+
+      if (!role || role !== "admin") {
+        return NextResponse.redirect(new URL("/admin/login", request.url))
+      }
+
+      if (!expires || new Date() > new Date(expires as any)) {
         return NextResponse.redirect(new URL("/admin/login", request.url))
       }
     } catch (error) {
