@@ -4,12 +4,13 @@ import { DynamicSidebar } from "@/components/dynamic-sidebar"
 import { DynamicContent } from "@/components/dynamic-content"
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
-export default function DynamicPage({ params }: PageProps) {
+export default async function DynamicPage({ params }: PageProps) {
+  const { slug } = await params
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100">
       {/* Top Navigation */}
@@ -42,7 +43,7 @@ export default function DynamicPage({ params }: PageProps) {
 
       <div className="flex">
         <DynamicSidebar />
-        <DynamicContent slug={params.slug} />
+        <DynamicContent slug={slug} />
 
         {/* Right Sidebar */}
         <aside className="w-80 bg-gray-900 border-l border-gray-800 h-screen overflow-y-auto">

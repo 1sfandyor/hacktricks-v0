@@ -36,21 +36,21 @@ export async function login(email: string, password: string) {
 
   // Create session
   const expires = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
-  const session = await encrypt({ userId: user._id, email: user.email, role: user.role, expires })
+  const session = await encrypt({ userId: user._id?.toString(), email: user.email, role: user.role, expires })
 
   // Save the session in a cookie
-  cookies().set("session", session, { expires, httpOnly: true })
+  ;(await cookies()).set("session", session, { expires, httpOnly: true })
 
   return user
 }
 
 export async function logout() {
   // Destroy the session
-  cookies().set("session", "", { expires: new Date(0) })
+  ;(await cookies()).set("session", "", { expires: new Date(0) })
 }
 
 export async function getSession(): Promise<User | null> {
-  const session = cookies().get("session")?.value
+  const session = (await cookies()).get("session")?.value
   if (!session) return null
 
   try {

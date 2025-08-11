@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { LogOut, Menu, X } from "lucide-react"
+import Link from "next/link"
 
 interface User {
   id: string
@@ -96,18 +97,18 @@ export function AdminLayout({ children }: AdminLayoutProps) {
           } lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-64 bg-gray-900 border-r border-gray-800 transition-transform duration-200 ease-in-out`}
         >
           <nav className="p-4 space-y-2 mt-16 lg:mt-0">
-            <a href="/admin" className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
+            <Link href="/admin" className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
               Dashboard
-            </a>
-            <a href="/admin/menus" className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
+            </Link>
+            <Link href="/admin/menus" className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
               Menu Management
-            </a>
-            <a href="/admin/pages" className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
+            </Link>
+            <Link href="/admin/pages" className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
               Page Management
-            </a>
-            <a href="/admin/articles" className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
+            </Link>
+            <Link href="/admin/articles" className="block px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors">
               Articles
-            </a>
+            </Link>
           </nav>
         </aside>
 

@@ -1,9 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { MenuModel } from "@/lib/models/menu"
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const menu = await MenuModel.findById(params.id)
+    const { id } = await params
+    const menu = await MenuModel.findById(id)
 
     if (!menu) {
       return NextResponse.json({ error: "Menu not found" }, { status: 404 })
@@ -16,10 +17,11 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const body = await request.json()
-    const menu = await MenuModel.update(params.id, body)
+    const { id } = await params
+    const menu = await MenuModel.update(id, body)
 
     if (!menu) {
       return NextResponse.json({ error: "Menu not found" }, { status: 404 })
@@ -32,9 +34,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const deleted = await MenuModel.delete(params.id)
+    const { id } = await params
+    const deleted = await MenuModel.delete(id)
 
     if (!deleted) {
       return NextResponse.json({ error: "Menu not found" }, { status: 404 })
