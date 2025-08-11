@@ -1,4 +1,3 @@
-import "dotenv/config"
 import { getDatabase } from "../lib/mongodb"
 
 async function createAdmin() {

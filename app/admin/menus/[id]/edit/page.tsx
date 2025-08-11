@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { AdminLayout } from "@/components/admin-layout"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -29,9 +29,13 @@ interface Page {
   published: boolean
 }
 
-export default function EditMenu() {
-  const params = useParams<{ id: string }>()
-  const id = params?.id
+interface EditMenuProps {
+  params: {
+    id: string
+  }
+}
+
+export default function EditMenu({ params }: EditMenuProps) {
   const [menu, setMenu] = useState<Menu | null>(null)
   const [pages, setPages] = useState<Page[]>([])
   const [label, setLabel] = useState("")
@@ -42,14 +46,12 @@ export default function EditMenu() {
   const router = useRouter()
 
   useEffect(() => {
-    if (!id) return
     fetchData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id])
+  }, [params.id])
 
   const fetchData = async () => {
     try {
-      const [menuResponse, pagesResponse] = await Promise.all([fetch(`/api/menu/${id}`), fetch("/api/pages")])
+      const [menuResponse, pagesResponse] = await Promise.all([fetch(`/api/menu/${params.id}`), fetch("/api/pages")])
 
       if (menuResponse.ok) {
         const menuData = await menuResponse.json()
@@ -94,7 +96,7 @@ export default function EditMenu() {
         pages: selectedPages,
       }
 
-      const response = await fetch(`/api/menu/${id}`, {
+      const response = await fetch(`/api/menu/${params.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
